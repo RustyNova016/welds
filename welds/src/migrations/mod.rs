@@ -201,6 +201,11 @@ pub struct TableState(pub(crate) Vec<TableDef>);
 pub trait MigrationWriter {
     fn up_sql(&self, syntax: Syntax) -> Vec<String>;
     fn down_sql(&self, syntax: Syntax) -> Vec<String>;
+
+    /// Turn the writer into a step
+    fn into_migration_step(self, name: &'static str) -> MigrationStep where Self: Sized + 'static {
+        MigrationStep::new(name, self)
+    }
 }
 
 /// Once migration step.
